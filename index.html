@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Repair Shop Management</title>
+
+<style>
+
+/* 🌟 BACKGROUND IMAGE (AC + FRIDGE THEME) */
+body{
+  margin:0;
+  font-family:Arial;
+  background:url("https://images.unsplash.com/photo-1581092795360-fd1ca04f0952?auto=format&fit=crop&w=1600&q=80");
+  background-size:cover;
+  background-position:center;
+  background-attachment:fixed;
+}
+
+/* 🌫️ DARK OVERLAY */
+body::before{
+  content:"";
+  position:fixed;
+  top:0;left:0;
+  width:100%;height:100%;
+  background:rgba(0,0,0,0.6);
+  z-index:-1;
+}
+
+header{
+  background:rgba(0,0,0,0.7);
+  color:#fff;
+  padding:15px;
+  text-align:center;
+  font-size:20px;
+}
+
+.container{
+  max-width:900px;
+  margin:20px auto;
+  background:rgba(255,255,255,0.1);
+  padding:20px;
+  border-radius:12px;
+  backdrop-filter: blur(10px);
+  color:white;
+}
+
+input,select{
+  padding:10px;
+  margin:5px;
+  border:none;
+  border-radius:8px;
+  outline:none;
+}
+
+button{
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:#00c6ff;
+  color:white;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#0072ff;
+}
+
+table{
+  width:100%;
+  margin-top:20px;
+  border-collapse:collapse;
+}
+
+th,td{
+  padding:10px;
+  border-bottom:1px solid rgba(255,255,255,0.3);
+  text-align:center;
+  color:white;
+}
+
+th{
+  background:rgba(0,0,0,0.6);
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+  ❄️ Repair Shop Management (AC & Fridge Service)
+</header>
+
+<div class="container">
+
+<h3>Add Repair Record</h3>
+
+<input type="text" id="name" placeholder="Customer Name">
+<input type="text" id="device" placeholder="AC / Fridge / Mobile">
+<input type="text" id="issue" placeholder="Issue">
+<input type="number" id="bill" placeholder="Bill Amount">
+
+<select id="status">
+<option>Pending</option>
+<option>Done</option>
+</select>
+
+<button onclick="addRecord()">Add</button>
+
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Device</th>
+<th>Issue</th>
+<th>Bill</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="tableBody"></tbody>
+</table>
+
+</div>
+
+<script>
+
+let records = JSON.parse(localStorage.getItem('records')) || [];
+
+function save(){
+  localStorage.setItem('records', JSON.stringify(records));
+  display();
+}
+
+function addRecord(){
+  let name = document.getElementById('name').value;
+  let device = document.getElementById('device').value;
+  let issue = document.getElementById('issue').value;
+  let bill = document.getElementById('bill').value;
+  let status = document.getElementById('status').value;
+
+  if(name=='' || device==''){
+    alert("Please fill required fields");
+    return;
+  }
+
+  records.push({name,device,issue,bill,status});
+  save();
+}
+
+function deleteRecord(index){
+  records.splice(index,1);
+  save();
+}
+
+function display(){
+  let table = document.getElementById('tableBody');
+  table.innerHTML = "";
+
+  records.forEach((rec,index)=>{
+    table.innerHTML += `
+      <tr>
+        <td>${rec.name}</td>
+        <td>${rec.device}</td>
+        <td>${rec.issue}</td>
+        <td>${rec.bill}</td>
+        <td>${rec.status}</td>
+        <td><button onclick="deleteRecord(${index})">Delete</button></td>
+      </tr>
+    `;
+  });
+}
+
+display();
+
+</script>
+
+</body>
+</html>
